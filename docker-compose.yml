@@ -1,0 +1,35 @@
+version: '2.2'
+
+networks: {}
+
+volumes: {}
+
+services:
+
+# ansible-check {{{
+  &ansible-check ansible-check:
+    extends:
+      file: common.yml
+      service: base
+    command: ["ansible-playbook", "-i", "${TARGET_HOST}:${TARGET_SSH_PORT},", "${PLAYBOOK_NAME}", "--check"]
+    container_name: *ansible-check
+    hostname: *ansible-check
+    logging:
+      options:
+        labels: ansible-check
+# }}}
+
+# ansible-run {{{
+  &ansible-run ansible-run:
+    extends:
+      file: common.yml
+      service: base
+    command: ["ansible-playbook", "-i", "${TARGET_HOST}:${TARGET_SSH_PORT},", "${PLAYBOOK_NAME}"]
+    container_name: *ansible-run
+    hostname: *ansible-run
+    logging:
+      options:
+        labels: ansible-run
+# }}}
+
+# vim:set filetype=docker-compose expandtab shiftwidth=2 tabstop=2 foldmethod=marker:

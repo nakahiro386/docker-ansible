@@ -1,0 +1,9 @@
+EXEC_UID=1000
+EXEC_GID=1000
+EXEC_USER=vagrant
+EXEC_GROUP=vagrant
+SSH_PATH=/home/vagrant/.ssh
+TARGET_HOST=vagranthost.localdomain
+TARGET_IP_ADDR=10.0.2.15
+TARGET_SSH_PORT=22
+PLAYBOOK_NAME=sample.yml

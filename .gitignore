@@ -1,0 +1,4 @@
+playbook/log/*
+!playbook/log/.gitkeep
+*.retry
+.env

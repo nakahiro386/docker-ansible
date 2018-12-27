@@ -1,0 +1,22 @@
+---
+- hosts: all
+  become: no
+  gather_facts: yes
+  environment:
+    LANG: 'C'
+    LC_ALL: 'C'
+    LC_MESSAGES: 'C'
+  vars:
+    foo: 'bar'
+  pre_tasks:
+    - block:
+      - name: Test connection
+        ping:
+      - name: facts
+        debug:
+          msg: "{{ ansible_facts }}"
+      tags: pre_tasks
+  roles:
+  tasks:
+  post_tasks:
+
