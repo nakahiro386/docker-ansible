@@ -1,4 +1,8 @@
-playbook/log/*
-!playbook/log/.gitkeep
+log/*
+!log/.gitkeep
 *.retry
 .env
+facts/*
+!facts/.gitkeep
+roles/*
+!roles/.gitkeep

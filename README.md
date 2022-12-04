@@ -9,15 +9,15 @@ Running Ansible inside Docker container
 1. Edit .env file
 1. Build docker image
     ```sh
-    $ docker-compose build --no-cache --force-rm --pull ansible-run
+    $ docker compose build --no-cache --pull bash
     ```
 1. Check
     ```sh
-    $ docker-compose run --rm ansible-check
+    $ docker compose run --rm playbook-check
     ```
 1. Run
     ```sh
-    $ docker-compose run --rm ansible-run
+    $ docker compose run --rm playbook
     ```
 
 ## License

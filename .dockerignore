@@ -1,0 +1,7 @@
+.git
+.venv
+*.yml
+facts
+group_vars
+log
+roles

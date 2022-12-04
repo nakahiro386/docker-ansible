@@ -1,35 +1,50 @@
-version: '2.2'
+version: '2.4'
 
-networks: {}
-
-volumes: {}
+# base{{{
+x-base: &base
+  restart: "no"
+  build:
+    context: .
+    args:
+      EXEC_UID: "${EXEC_UID:-1000}"
+      EXEC_USER: "${EXEC_USER:-ansible}"
+      EXEC_GID: "${EXEC_GID:-1000}"
+      EXEC_GROUP: "${EXEC_GROUP:-ansible}"
+  image: localhost:5000/nakahiro386/ansible:latest
+  init: true
+  tty: true
+  stdin_open: true
+  network_mode: "host"
+  volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - ${SSH_PATH:-$HOME}:/home/${EXEC_USER:-ansible}/.ssh:ro
+    - .:/ansible:rw
+  environment:
+    PIPENV_VENV_IN_PROJECT: 1
+    VIRTUALENV_ALWAYS_COPY: 1
+  working_dir: /ansible
+  logging: &logging
+    driver: json-file
+    options:
+      max-size: "100m"
+      max-file: "10"
+# }}}
 
 services:
+  bash:
+    << : *base
+    command: ["bash"]
 
-# ansible-check {{{
-  &ansible-check ansible-check:
-    extends:
-      file: common.yml
-      service: base
-    command: ["ansible-playbook", "-i", "${TARGET_HOST}:${TARGET_SSH_PORT},", "${PLAYBOOK_NAME}", "--check"]
-    container_name: *ansible-check
-    hostname: *ansible-check
-    logging:
-      options:
-        labels: ansible-check
-# }}}
+  galaxy-install:
+    << : *base
+    command: ["pipenv", "run", "galaxy-install"]
 
-# ansible-run {{{
-  &ansible-run ansible-run:
-    extends:
-      file: common.yml
-      service: base
-    command: ["ansible-playbook", "-i", "${TARGET_HOST}:${TARGET_SSH_PORT},", "${PLAYBOOK_NAME}"]
-    container_name: *ansible-run
-    hostname: *ansible-run
-    logging:
-      options:
-        labels: ansible-run
-# }}}
+  playbook-check:
+    << : *base
+    command: ["pipenv", "run", "playbook-check"]
+
+  playbook:
+    << : *base
+    command: ["pipenv", "run", "playbook"]
 
 # vim:set filetype=docker-compose expandtab shiftwidth=2 tabstop=2 foldmethod=marker:

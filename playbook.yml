@@ -1,13 +1,14 @@
 ---
 - hosts: all
   become: no
+  module_defaults:
+    ansible.builtin.setup:
+      gather_subset:
+        - 'all'
+        - '!network'
+        - '!hardware'
   gather_facts: yes
-  environment:
-    LANG: 'C'
-    LC_ALL: 'C'
-    LC_MESSAGES: 'C'
-  vars:
-    foo: 'bar'
+  environment: "{{ environment_vars }}"
   pre_tasks:
     - block:
       - name: Test connection
@@ -19,4 +20,3 @@
   roles:
   tasks:
   post_tasks:
-
